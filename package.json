@@ -1,0 +1,11 @@
+{
+  "name": "inotebook-backend",
+  "version": "1.0.0",
+  "description": "iNotebook - Your notebook in the cloud",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.3"
+  }
+}
