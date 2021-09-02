@@ -3,9 +3,13 @@ const fs = require("fs");
 const path = require("path");
 const router = express.Router();
 
-const routes = fs.readdirSync(path.join(__dirname, "subroutes"));
+// Initializing all sub-routes.
+let routes = fs.readdirSync(__dirname);
+routes.splice(routes.indexOf("index.js"), 1);
+
 for (const route of routes) {
-  router.use(`/${route}`, require("./subroutes/" + route));
+  const d = require(path.join(__dirname, route));
+  router.use(d.route, d.router);
 }
 
 module.exports = router;
