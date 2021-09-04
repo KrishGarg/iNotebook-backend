@@ -37,9 +37,7 @@ router.post(
       }
 
       const payload = {
-        user: {
-          id: user.id,
-        },
+        user: user.id,
       };
 
       const authToken = jwt.sign(payload, JWTSecret);

@@ -7,7 +7,7 @@ router = express.Router();
 // Get logged in user's details.
 router.post("/", fetchUser, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user).select("-password");
     res.json({
       user,
     });
