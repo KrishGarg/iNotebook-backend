@@ -1,7 +1,11 @@
 const express = require("express");
-const router = express.Router();
 const User = require("../../db/models/User");
 const { body, validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
+const { jwt_secret: JWTSecret } = require("../../config.json");
+const jwt = require("jsonwebtoken");
+
+const router = express.Router();
 
 // Create a user using: POST "/api/auth/createuser". Doesn't require any authentication.
 router.post(
@@ -31,17 +35,26 @@ router.post(
           .json({ error: "A user with this email already exists." });
       }
 
-      // If it doesn't exist, we are adding it to the database.
-      user = await User.create(req.body);
+      const salt = await bcrypt.genSalt(10);
+      const secPass = await bcrypt.hash(req.body.password, salt);
 
-      // Responsing with the json data which is present in the database.
-      res.json(user);
+      // If it doesn't exist, we are adding it to the database.
+      user = await User.create({
+        name: req.body.name,
+        password: secPass,
+        email: req.body.email,
+      });
+
+      const data = {
+        user: user.id,
+      };
+      const authToken = jwt.sign(data, JWTSecret);
+      res.json({ authToken });
     } catch (err) {
       // If any unexpected error occurs, it logs the error and sends a 500 response.
       console.error(err.message);
       res.status(500).json({
-        error:
-          "There was an unknown error while creating the user. Please wait till the admins look into this. The error has been recorded.",
+        error: "Internal Server Error",
         rawErrorMessage: err.message,
       });
     }
@@ -49,6 +62,6 @@ router.post(
 );
 
 module.exports = {
-  route: "/createuser",
+  route: "/createuser", // Equal to /api/auth/createuser
   router,
 };
