@@ -14,7 +14,10 @@ const fetchUser = (req, res, next) => {
     req.user = data.user;
     next();
   } catch (err) {
-    res.send(401);
+    console.error(err);
+    res.status(401).json({
+      error: "Token Verification Failed",
+    });
   }
 };
 
