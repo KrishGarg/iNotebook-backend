@@ -3,10 +3,8 @@ const router = express.Router();
 const fetchUser = require("../../middlewares/fetchUser");
 const Notes = require("../../db/models/Notes");
 
-router.put("/:id", fetchUser, async (req, res) => {
+router.delete("/:id", fetchUser, async (req, res) => {
   try {
-    const { title, description, tag } = req.body;
-
     let note = await Notes.findById(req.params.id);
 
     if (!note) {
@@ -21,19 +19,8 @@ router.put("/:id", fetchUser, async (req, res) => {
       });
     }
 
-    if (title) {
-      note.title = title;
-    }
-    if (description) {
-      note.description = description;
-    }
-    if (tag) {
-      note.tag = tag;
-    }
-
-    await note.save();
-
-    res.json(note);
+    await note.delete();
+    res.json({ message: "Note has been deleted." });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
@@ -44,6 +31,6 @@ router.put("/:id", fetchUser, async (req, res) => {
 });
 
 module.exports = {
-  route: "/update",
+  route: "/delete",
   router,
 };

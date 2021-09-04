@@ -16,5 +16,5 @@ for (const route of routes) {
 }
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`App is listening on http://localhost:${port}`);
 });
